@@ -28,6 +28,20 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
     //client.close(); 
   });
 })
+app.post ('/insert', (req, res)=> {
+  client.connect((err, db)=>{
+    console.log("base de données connectée pour le post");
+    if(err|| !db){
+        return false; 
+    }
+    db.db = client.db("blog").collection("post").insertOne({}, function(err, result){
+      if(!err){ 
+        console.log(result)
+        res.status(200).send(result);
+    }
+    })
+  })
+})
 app.listen(port, ()=> {
     console.log("Serveur sur le port "+ port);
 })
