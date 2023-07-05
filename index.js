@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import { MongoClient, ServerApiVersion } from 'mongodb';
 const app = express()
 const port = 8000;
+app.use(express.json());
 dotenv.config(); 
 const uri= process.env.STRING_URI; 
 // const uri = "mongodb+srv://camara92:Wxtaze9z1K5knzlq@cluster0.bbhrjyy.mongodb.net/?retryWrites=true&w=majority";
@@ -28,13 +29,17 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
     //client.close(); 
   });
 })
+const obj= {
+  title: "Des élus à portée de baffes » : la sécurité des maires jugée insuffisante",
+  content: "cest"
+};
 app.post ('/insert', (req, res)=> {
   client.connect((err, db)=>{
     console.log("base de données connectée pour le post");
     if(err|| !db){
         return false; 
     }
-    db.db = client.db("blog").collection("post").insertOne({}, function(err, result){
+    db.db = client.db("blog").collection("post").insertOne(req.body, function(err, result){
       if(!err){ 
         console.log(result)
         res.status(200).send(result);
